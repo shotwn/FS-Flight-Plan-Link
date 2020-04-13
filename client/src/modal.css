@@ -1,0 +1,29 @@
+#FSFPL-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(21, 21, 21, 0.3);
+    z-index:1000;
+    overflow: hidde;
+}
+
+#FSFPL-modal-wrapper {
+    border-radius: 15px;
+    width:600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 200px;
+    position: relative;
+    background-color: #151515;
+    color: white;
+}
+
+#FSFPL-modal-inside {
+    padding: 50px;
+}
+
+#FSFPL-modal-button {
+    float: right;
+}
