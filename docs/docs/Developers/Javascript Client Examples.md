@@ -1,4 +1,4 @@
-<script src='/js/main.js' type='text/javascript'></script>
+<script src='../../js/main.js' type='text/javascript'></script>
 
 # JavaScript Client Examples
 ## Loading Flight Plan Using JavaScript
@@ -167,14 +167,14 @@ LTFM - ISTANBUL NEW AIRPORT / UKDE - MOKRAYA
 
 
 <table class="grid">
-<tr class="capt bdrs"><td colspan="2"><center>Departure : <a id='departure' href="http://www.turkishvirtual.com/airports.asp?code=LTFM">LTFM</a> - ISTANBUL NEW AIRPORT (Click to see airport details)</center></td></tr>
+<tr class="capt bdrs"><td colspan="2"><center>Departure : <a id='departure' href="https://www.turkishvirtual.com/airports.asp?code=LTFM">LTFM</a> - ISTANBUL NEW AIRPORT (Click to see airport details)</center></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">METAR</td><td><div id="metar1">LTFM 142050Z 24010KT 9999 SCT035 BKN100 17/05 Q1012 NOSIG</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">TAF</td><td><div id="taf1">No TAF available for LTFM.</div></td></tr>
-<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="http://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="http://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
+<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="https://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="https://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
 </table>
 
 <table class="grid">
-<tr class="capt bdrs"><td colspan="2"><center>Destination : <a id='destination' href="http://www.turkishvirtual.com/airports.asp?code=UKDE">UKDE</a> - MOKRAYA (Click to see airport details)</center></td></tr>
+<tr class="capt bdrs"><td colspan="2"><center>Destination : <a id='destination' href="https://www.turkishvirtual.com/airports.asp?code=UKDE">UKDE</a> - MOKRAYA (Click to see airport details)</center></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg w64">METAR</td><td><div id="metar2">UKDE 141500Z 16006MPS 120V210 CAVOK 17/M00 Q1006 R20L/090070 NOSIG</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">TAF</td><td><div id="taf2">2019/12/20 16:09
 TAF 
@@ -182,14 +182,14 @@ TAF
       AMD UKDE 201606Z 2016/2124 09003MPS 0100 FZFG VV001 TXM01/2016Z TNM03/2124Z 
       TEMPO 2018/2021 1000 BR OVC003
 </div></td></tr>
-<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="http://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="http://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
+<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="https://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="http://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
 </table>
 
 <table class="grid">
-<tr class="capt bdrs"><td colspan="2"><center>Alternate : <a id="alternate" href="http://www.turkishvirtual.com/airports.asp?code=UKOH">UKOH</a> - KHERSON INTL (Click to see airport details)</center></td></tr>
+<tr class="capt bdrs"><td colspan="2"><center>Alternate : <a id="alternate" href="https://www.turkishvirtual.com/airports.asp?code=UKOH">UKOH</a> - KHERSON INTL (Click to see airport details)</center></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">METAR</td><td><div id="metar3"></div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">TAF</td><td><div id="taf3">No TAF available for UKOH.</div></td></tr>
-<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="http://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="http://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
+<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="https://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="https://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
 </table>
 
 <br>
@@ -221,7 +221,7 @@ TAF
 </br>
 
 
-<center><img src="http://turkishvirtual.com/img/schflight.jpg" width="620" height="161"></img></center><br>
+<center><img src="https://turkishvirtual.com/img/schflight.jpg" width="620" height="161"></img></center><br>
 <center>(This is a Scheduled Flight)</center>
 
 
@@ -254,7 +254,7 @@ TAF
 <tr class="seq1"><td class="alnr fntb clrr bckg">Flight Type</td><td><div id="fty">International Flight</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Ticket Price</td><td><div id="fty">1400</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Departure Time</td><td><div id="fty">1140 (z)</div></td></tr>
-<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="http://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="http://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
+<tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="https://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="https://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
 </table>
 
 
