@@ -48,7 +48,6 @@ def route_format(route):
 
 
 def route_format(route, **kwargs):
-    print(kwargs)
     return Route(route, kwargs['server'])
 
 
@@ -119,7 +118,8 @@ MODEL = {
     'equipment': 'str',
     'type': 'str',
     'alternate': 'str',
-    'equipment_suffix': 'str'
+    'equipment_suffix': 'str',
+    'distance': 'int'
 }
 
 WAYPOINT_MODEL = {

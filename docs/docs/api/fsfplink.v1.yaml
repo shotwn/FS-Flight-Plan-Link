@@ -231,6 +231,8 @@ components:
         destination_runway:
           type: string
           maxLength: 3
+        distance:
+          type: integer
     Waypoint:
       title: Waypoint
       type: object
