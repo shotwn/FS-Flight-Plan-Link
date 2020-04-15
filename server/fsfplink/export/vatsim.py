@@ -3,13 +3,11 @@ import webbrowser
 import fsfplink.exceptions
 import fsfplink.utility
 
-NAME = 'Vatsim'
-CLASSNAME = 'Vatsim'
-
 
 class Vatsim:
-    def __init__(self, parent):
-        self.settings = parent.settings
+    def __init__(self, parent, options):
+        self.parent = parent
+        self.options = options
         self.mapping = {
             '2': 'callsign',
             '4': 'cruise_speed',
@@ -53,3 +51,8 @@ class Vatsim:
         encoded = urllib.parse.urlencode(mapped)
         url = 'https://cert.vatsim.net/fp/file.php'
         webbrowser.open_new_tab(f"{url}?{encoded}")
+
+
+ID = 'vatsim'
+NAME = 'Vatsim'
+CLASS = Vatsim

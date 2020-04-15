@@ -3,13 +3,11 @@ import xml.etree.ElementTree as ET
 import fsfplink.exceptions
 import fsfplink.utility
 
-NAME = 'vPilot'
-CLASSNAME = 'VPilot'
-
 
 class VPilot:
-    def __init__(self, server):
-        self.settings = server.settings
+    def __init__(self, parent, options):
+        self.parent = parent
+        self.options = options
         self.mapping = {
             'FlightType': 'type',
             'Equipment': 'equipment',
@@ -51,8 +49,21 @@ class VPilot:
             xml.set('FuelMinutes', plan['block_time']['minutes'])
 
         # print(ET.tostring(xml))
-        directory = os.path.join(self.settings.get('vPilot', 'export_dir'))
+        directory = os.path.join(self.options['export_dir'])
         src = os.path.join(directory, f"{plan['departure']}{plan['destination']}.vfp")
 
         with open(src, 'wb+') as plan_xml:
             plan_xml.write(ET.tostring(xml))
+
+
+def default_options(options):
+    module_defaults = {
+        'export_dir': '.\\'
+    }
+    module_defaults.update(options)
+    return module_defaults
+
+
+ID = 'vpilot'
+NAME = 'vPilot'
+CLASS = VPilot

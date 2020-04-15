@@ -2,8 +2,10 @@ import re
 import importlib
 import json
 import base64
+import uuid
 from aiohttp import web
 import aiohttp_cors
+from loguru import logger
 from fsfplink.plan import Plan
 from fsfplink.settings import Settings
 import fsfplink.exceptions
@@ -14,34 +16,71 @@ DEFAULT_SETTINGS = {
         'name': 'ENTER YOUR NAME',
         'base': 'BASE'
     },
-    'vPilot': {
-        'export_dir': '.\\'
-    }
+    'exporters': []
 }
 
 
 class FSFPLServer:
+    """
+    Initiates:
+        available_exporters: ``dict`` with keys as module id's.
+            module_id: module.
+        exporters: ``list`` of initiated exporters.
+    """
     def __init__(self):
+        self.available_exporters = {}
         self.exporters = []
         self.app = web.Application()
         self.cors = aiohttp_cors.setup(self.app)
         self.settings = Settings('.\\settings.json', DEFAULT_SETTINGS)
         self.define_routes()
-        self.fetch_exporters()
+        self.import_available_exporters()
 
-    def fetch_exporters(self):
+    def import_available_exporters(self):
         vpilot = importlib.import_module('fsfplink.export.vpilot')
-        self.exporters.append({
-            'module': vpilot,
-            'name': vpilot.NAME,
-            'class': getattr(vpilot, vpilot.CLASSNAME)(self)
-        })
+        self.available_exporters[vpilot.ID] = vpilot
         vatsim = importlib.import_module('fsfplink.export.vatsim')
-        self.exporters.append({
-            'module': vatsim,
-            'name': vatsim.NAME,
-            'class': getattr(vatsim, vatsim.CLASSNAME)(self)
+        self.available_exporters[vatsim.ID] = vatsim
+
+    def initiate_exporters(self):
+        """ Read exporters from settings.
+
+            exporter_options: A ``dict`` with following keys.
+                id: id defined in module.ID
+                options: options field to pass on the exporter.
+                uuid: unique string as a unique key.
+        """
+        settings_exporters = self.settings.get('exporters')
+        self.exporters = []
+        for exporter_options in settings_exporters:
+            module = self.available_exporters.get(exporter_options['id'])
+            if not module:
+                # Not found.
+                continue
+
+            exporter = module.CLASS(self, exporter_options['options'])
+            self.exporters.append(exporter)
+
+    def add_exporter(self, module_id, options={}):
+        module = self.available_exporters.get(module_id)
+        if not module:
+            logger.debug(f"Cannot add exporter. Module doesn't exist: {module_id}")
+            return False
+
+        default_options_func = getattr(module, 'default_options', None)
+        if default_options_func:
+            merged_options = default_options_func(options)
+        else:
+            merged_options = options
+
+        exporters = self.settings.get('exporters')
+        exporters.append({
+            'id': module_id,
+            'options': merged_options,
+            'uuid': str(uuid.uuid4())
         })
+        self.settings.set(exporters, 'exporters')
+        self.initiate_exporters()
 
     def define_routes(self):
         self.app.add_routes(
@@ -136,7 +175,7 @@ class FSFPLServer:
         errors = {}
         for exporter in self.exporters:
             try:
-                await exporter["class"].export(plan)
+                await exporter.export(plan)
             except fsfplink.exceptions.HandledException as exc:
                 print(f'Exporter error for {exporter["name"]}: {exc}')
                 errors[exporter['name']] = exc.message
@@ -146,4 +185,7 @@ class FSFPLServer:
 
 if __name__ == '__main__':
     SERVER = FSFPLServer()
+    SERVER.settings.set([], 'exporters')
+    SERVER.add_exporter('vatsim')
+    SERVER.add_exporter('vpilot')
     SERVER.start()
