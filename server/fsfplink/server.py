@@ -142,6 +142,8 @@ class FSFPLServer:
 
     async def post_plan(self, request):
         headers = {}
+        logger.debug(request)
+        logger.debug(request.headers)
         # headers['Access-Control-Allow-Origin'] = '*'
 
         if not await self.basic_auth(request.headers):
