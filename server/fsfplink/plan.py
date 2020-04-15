@@ -1,6 +1,7 @@
 import json
 import re
 import builtins
+from loguru import logger
 import fsfplink.exceptions
 from fsfplink.json import json_encoder
 
@@ -138,7 +139,9 @@ def model_parser(data, model, **kwargs):
     for key, value in model.items():
         if isinstance(value, dict) and 'required' in value and value['required']:
             if key not in data:
-                raise fsfplink.exceptions.MissingField(f'Missing required field {key}')
+                error_msg = f'Missing required field {key}'
+                logger.error(error_msg)
+                raise fsfplink.exceptions.MissingField(error_msg)
 
     # FORMAT DATA PER MODEL
     for key, value in data.items():
@@ -161,6 +164,7 @@ def model_parser(data, model, **kwargs):
                     'key': key,
                     'message': f'Input in wrong format or value for {key}. Passing.'
                 })
+                continue
         else:
             # Has an external formatter
             if 'format' in spec:
@@ -196,6 +200,9 @@ def model_parser(data, model, **kwargs):
                     })
                     continue
         formatted[key] = formatted_value
+
+    if errors:
+        logger.error(errors)
 
     return [formatted, errors]
 
