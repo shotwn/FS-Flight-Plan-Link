@@ -1,0 +1,255 @@
+openapi: 3.0.0
+info:
+  title: FSFPLink
+  version: '1.0'
+  contact:
+    name: shotwn
+    url: github.com/shotwn
+  license:
+    name: GPL-3
+servers:
+  - url: 'http://127.0.0.1:32030'
+    description: Local
+paths:
+  /plan:
+    post:
+      summary: Post Plan
+      operationId: post-plan
+      responses:
+        '200':
+          description: OK
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source:
+                  type: string
+                plan:
+                  $ref: '#/components/schemas/Plan'
+                secondary_plan:
+                  $ref: '#/components/schemas/Plan'
+              required:
+                - source
+                - plan
+            examples:
+              Example Request:
+                value:
+                  source: ExampleClient
+                  plan:
+                    air_time: '01:01'
+                    airac: 2004
+                    aircraft: A320
+                    airline: Turkish
+                    alternative: LTFJ
+                    block_fuel: 8000
+                    block_time: '1:45'
+                    callsign: THY4100
+                    cruise_altitude: 16000
+                    departure: LTFM
+                    departure_date: '2020-04-12'
+                    departure_time: '15:30'
+                    flight_no: '4100'
+                    route: ASMAP L333 LATGA
+                    sid:
+                      name: ASMA2D
+                      route:
+                        - name: test1
+                          latitude: 0
+                          longitude: 0
+                          altitude: 5000
+                          speed: 220
+                        - name: test2
+                          latitude: 1
+                          longitude: 1
+                          altitude: 3000
+                          speed: 170
+                    star:
+                      name: LATG1K
+                      route: ''
+                    tow: 65000
+                    units: KG
+                    zfw: 54000
+                    destination: LTCA
+                    remarks: //TEST
+                    equipment: DFGILORSUVWY/L
+                    type: IFR
+                    cruise_speed: 340
+                    alternate: LTFJ
+                    equipment_suffix: L
+                  secondary_plan:
+                    air_time: '01:01'
+                    airac: 2004
+                    aircraft: A320
+                    airline: Turkish
+                    alternative: LTFJ
+                    block_fuel: 8000
+                    block_time: '1:45'
+                    callsign: THY4100
+                    cruise_altitude: 16000
+                    departure: LTFM
+                    departure_date: '2020-04-12'
+                    departure_time: '15:30'
+                    flight_no: '4100'
+                    route: string
+                    sid:
+                      name: string
+                      route: string
+                    star:
+                      name: string
+                      route: string
+                    tow: 65000
+                    units: KG
+                    zfw: 54000
+                    destination: LTCA
+                    remarks: //TEST
+                    equipment: DFGILORSUVWY/L
+                    type: IFR
+                    cruise_speed: 340
+                    alternate: LTFJ
+                    equipment_suffix: L
+        description: ''
+      security:
+        - PinNumber: []
+      tags:
+        - plan
+components:
+  schemas:
+    Plan:
+      title: Plan
+      type: object
+      x-examples:
+        example-1: {}
+      description: ''
+      properties:
+        air_time:
+          type: string
+          example: '01:01'
+        airac:
+          type: integer
+          example: 2004
+        aircraft:
+          type: string
+          example: A320
+        airline:
+          type: string
+          example: Turkish
+        alternative:
+          type: string
+          example: LTFJ
+        block_fuel:
+          type: integer
+          example: 8000
+        block_time:
+          type: string
+          example: '1:45'
+        callsign:
+          type: string
+          example: THY4100
+        cruise_altitude:
+          type: integer
+          example: 16000
+        departure:
+          type: string
+          example: LTFM
+          minLength: 4
+          maxLength: 4
+        departure_date:
+          type: string
+          example: '2020-04-12'
+        departure_time:
+          type: string
+          example: '15:30'
+        flight_no:
+          type: string
+          example: '4100'
+        route:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/Waypoint'
+        sid:
+          type: object
+          properties:
+            name:
+              type: string
+            route:
+              oneOf:
+                - type: string
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/Waypoint'
+        star:
+          type: object
+          properties:
+            name:
+              type: string
+            route:
+              oneOf:
+                - type: string
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/Waypoint'
+        tow:
+          type: integer
+          example: 65000
+        units:
+          type: string
+          example: KG
+        zfw:
+          type: integer
+          example: 54000
+        destination:
+          type: string
+          example: LTCA
+          minLength: 4
+          maxLength: 4
+        remarks:
+          type: string
+          example: //TEST
+        equipment:
+          type: string
+          example: DFGILORSUVWY/L
+        type:
+          type: string
+          example: IFR
+        cruise_speed:
+          type: integer
+          example: 340
+        alternate:
+          type: string
+          example: LTFJ
+        equipment_suffix:
+          type: string
+          example: L
+        departure_runway:
+          type: string
+          maxLength: 3
+        destination_runway:
+          type: string
+          maxLength: 3
+        distance:
+          type: integer
+    Waypoint:
+      title: Waypoint
+      type: object
+      x-examples: {}
+      properties:
+        name:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        altitude:
+          type: integer
+        speed:
+          type: integer
+  securitySchemes:
+    PinNumber:
+      type: http
+      scheme: Basic
+      description: ''

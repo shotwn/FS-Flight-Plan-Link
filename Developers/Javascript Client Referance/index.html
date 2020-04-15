@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Javascript Client Reference - FS Flight Plan Link</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../../css/main.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Javascript Client Reference";
+    var mkdocs_page_input_path = "Developers\\Javascript Client Referance.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/rust.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/json.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/html.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> FS Flight Plan Link</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="tocbase current">
+    
+    
+      
+  <li class="navtree toctree-l1 label">
+    <p class="caption">Desktop Software</p>
+  </li>
+
+
+  
+
+  
+    <li class="navtree toctree-l1 group">
+      <ul class="navtree subnav-l1 current">
+          
+
+
+  <li class="navtree toctree-l2 inactive">
+    <a class="" href="../../Desktop Software/Desktop Software/">Desktop Software</a>
+  </li>
+        
+      </ul>
+    </li>
+    
+      
+  <li class="navtree toctree-l1 label">
+    <p class="caption">Developers</p>
+  </li>
+
+
+  
+
+  
+    <li class="navtree toctree-l1 group">
+      <ul class="navtree subnav-l1 current">
+          
+
+
+  <li class="navtree toctree-l2 inactive">
+    <a class="" href="../Javascript Client Examples/">Javascript Client Examples</a>
+  </li>
+        
+          
+
+
+  
+    
+    <li class="navtree toctree-l2 page current">
+      <a class="current" href="./">
+        Javascript Client Reference
+          <span class="toctree-expand"></span>
+      </a>
+    </li>
+    
+      
+
+
+
+  <li class="toctree-l2 current">
+    <ul class="subnav-l2 current">
+    
+      
+          
+
+  <li class="toctree-l3 current with-children">
+    <a href="#plan">
+      Plan
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l3 current">
+    <ul class="subnav-l3 current">
+    
+      
+          
+
+  <li class="toctree-l4 current with-children">
+    <a href="#parameters">
+      Parameters
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l4 current">
+    <ul class="subnav-l4 current">
+    
+      
+        <li class="toctree-l5">
+          <a class="toctree-l6" href="#plan_1">plan</a>
+        </li>
+    
+      
+        <li class="toctree-l5">
+          <a class="toctree-l6" href="#options">options</a>
+        </li>
+    
+    </ul>
+  </li>
+
+      
+    
+      
+          
+
+  <li class="toctree-l4">
+    <a href="#createbutton-buttonoptions">
+      createButton (buttonOptions)
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l4">
+    <ul class="subnav-l4 toc-hidden">
+    
+      
+          
+
+  <li class="toctree-l5 current with-children">
+    <a href="#parameters_1">
+      Parameters
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l5 current">
+    <ul class="subnav-l5 current">
+    
+      
+        <li class="toctree-l6">
+          <a class="toctree-l7" href="#buttonoptions">buttonOptions</a>
+        </li>
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+      
+          
+
+  <li class="toctree-l4">
+    <a href="#send-options">
+      send (options)
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l4">
+    <ul class="subnav-l4 toc-hidden">
+    
+      
+          
+
+  <li class="toctree-l5 current with-children">
+    <a href="#parameters_2">
+      Parameters
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l5 current">
+    <ul class="subnav-l5 current">
+    
+      
+        <li class="toctree-l6">
+          <a class="toctree-l7" href="#options_1">options</a>
+        </li>
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+      
+          
+
+  <li class="toctree-l3">
+    <a href="#utility">
+      Utility
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l3">
+    <ul class="subnav-l3 toc-hidden">
+    
+      
+          
+
+  <li class="toctree-l4 current with-children">
+    <a href="#collect-collectionmapping">
+      collect (collectionMapping)
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l4 current">
+    <ul class="subnav-l4 current">
+    
+      
+          
+
+  <li class="toctree-l5 current with-children">
+    <a href="#parameters_3">
+      Parameters
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l5 current">
+    <ul class="subnav-l5 current">
+    
+      
+          
+
+  <li class="toctree-l6 current with-children">
+    <a href="#collectionmapping">
+      collectionMapping
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l6 current">
+    <ul class="subnav-l6 current">
+    
+      
+        <li class="toctree-l7">
+          <a class="toctree-l8" href="#get-result-of-a-function-call">Get result of a function call.</a>
+        </li>
+    
+      
+        <li class="toctree-l7">
+          <a class="toctree-l8" href="#get-values-from-dom-objects">Get values from DOM objects.</a>
+        </li>
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+      
+          
+
+  <li class="toctree-l4">
+    <a href="#send-data-options">
+      send (data, options):
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l4">
+    <ul class="subnav-l4 toc-hidden">
+    
+      
+          
+
+  <li class="toctree-l5 current with-children">
+    <a href="#parameters_4">
+      Parameters
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+
+
+
+  <li class="toctree-l5 current">
+    <ul class="subnav-l5 current">
+    
+      
+        <li class="toctree-l6">
+          <a class="toctree-l7" href="#data">data</a>
+        </li>
+    
+      
+        <li class="toctree-l6">
+          <a class="toctree-l7" href="#options_2">options</a>
+        </li>
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+      
+    
+    </ul>
+  </li>
+
+
+  
+        
+          
+
+
+  <li class="navtree toctree-l2 inactive">
+    <a class="" href="../Server API/">Server API Referance</a>
+  </li>
+        
+      </ul>
+    </li>
+    
+  </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">FS Flight Plan Link</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Developers &raquo;</li>
+        
+      
+    
+    <li>Javascript Client Reference</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="javascript-client-reference">Javascript Client Reference<a class="headerlink" href="#javascript-client-reference" title="Permanent link"></a></h1>
+<h2 id="plan">Plan<a class="headerlink" href="#plan" title="Permanent link"></a></h2>
+<p><code>class: fsfpl.Plan(plan, options)</code></p>
+<p>A flight plan interface.</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link"></a></h4>
+<h5 id="plan_1">plan<a class="headerlink" href="#plan_1" title="Permanent link"></a></h5>
+<p><code>object</code></p>
+<p>Plan data, object, as defined in Server API.</p>
+<h5 id="options">options<a class="headerlink" href="#options" title="Permanent link"></a></h5>
+<p><code>object</code> <code>optional</code></p>
+<p>Currently there are no specific options to load to this class.</p>
+<h3 id="createbutton-buttonoptions">createButton (buttonOptions)<a class="headerlink" href="#createbutton-buttonoptions" title="Permanent link"></a></h3>
+<p>Append a button connected to Plan.send in to a DOM object.</p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link"></a></h4>
+<h5 id="buttonoptions">buttonOptions<a class="headerlink" href="#buttonoptions" title="Permanent link"></a></h5>
+<p><code>object</code></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>to</td>
+<td>String</td>
+<td>ID of a DOM object to append to</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+<td>Inside text of the button</td>
+</tr>
+</tbody>
+</table>
+<h3 id="send-options">send (options)<a class="headerlink" href="#send-options" title="Permanent link"></a></h3>
+<p>Send current flight plan to server. (desktop application)</p>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link"></a></h4>
+<h5 id="options_1">options<a class="headerlink" href="#options_1" title="Permanent link"></a></h5>
+<p><code>object</code></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>caller</td>
+<td>DOM Element</td>
+<td>a DOM element (like button) to disable during HTTP request. It gets activated after request is over.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="utility">Utility<a class="headerlink" href="#utility" title="Permanent link"></a></h2>
+<p><code>class: fsfpl.Utility()</code></p>
+<p>Utily class. Might be subject to change.</p>
+<h3 id="collect-collectionmapping">collect (collectionMapping)<a class="headerlink" href="#collect-collectionmapping" title="Permanent link"></a></h3>
+<p>Accepts collectionMapping object. Keys should be equal to flight plan fields defined in Server API.
+Values can be in two formats.</p>
+<p>Returns collected data from DOM elements.</p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link"></a></h4>
+<h5 id="collectionmapping">collectionMapping<a class="headerlink" href="#collectionmapping" title="Permanent link"></a></h5>
+<h6 id="get-result-of-a-function-call">Get result of a function call.<a class="headerlink" href="#get-result-of-a-function-call" title="Permanent link"></a></h6>
+<p>'func' field accepts a function. Function receives whole object as an argument. So you can use other fields in the object as you wish.</p>
+<pre><code>'block_time': {
+    func: function,
+    example: 'example'
+}
+</code></pre>
+
+<h6 id="get-values-from-dom-objects">Get values from DOM objects.<a class="headerlink" href="#get-values-from-dom-objects" title="Permanent link"></a></h6>
+<table>
+<thead>
+<tr>
+<th>field</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>selector</td>
+<td>CSS selector. It will receive first DOM object with given CSS selector.</td>
+</tr>
+<tr>
+<td>attribute</td>
+<td>Which attribute to read from</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Special case: 'innerHTML' can be given as 'attribute', in this case innerHTML will be read eventhough it is not an attribute.</p>
+</blockquote>
+<pre><code class="javascript">{
+    'destination': {
+        selector: '#my-div',
+        attribute: 'innerHTML'
+    },
+    'departure': {
+        selector: '#my-input',
+        attribute: 'value'
+    },
+    'aircraft': {
+        selector: 'input[name=&quot;aircraft&quot;]:checked',
+        attribute: 'value'
+    }
+}
+</code></pre>
+
+<h3 id="send-data-options">send (data, options):<a class="headerlink" href="#send-data-options" title="Permanent link"></a></h3>
+<p>Creates a flight plan using data, and sends it.</p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link"></a></h4>
+<h5 id="data">data<a class="headerlink" href="#data" title="Permanent link"></a></h5>
+<p>Flight plan data. Defined in server API.
+Check Plan.send() for more details.</p>
+<h5 id="options_2">options<a class="headerlink" href="#options_2" title="Permanent link"></a></h5>
+<p>Flight plan send options.
+Check Plan.send() for more details.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Server API/" class="btn btn-neutral float-right" title="Server API Referance">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Javascript Client Examples/" class="btn btn-neutral" title="Javascript Client Examples"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Javascript Client Examples/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Server API/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../js/main.js" defer></script>
+      <script src="../../api/fsfplink.v1.yaml" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
