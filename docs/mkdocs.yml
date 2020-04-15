@@ -6,7 +6,7 @@ extra_css:
   - ./css/main.css
 site_dir: ./site/
 theme:
-  name: 'rtd-dropdown'
+  name: 'readthedocs'
   highlightjs: true
   hljs_languages:
         - yaml
