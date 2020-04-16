@@ -18,6 +18,8 @@ paths:
       responses:
         '200':
           description: OK
+        '401':
+          description: Unauthorized
       parameters: []
       requestBody:
         content:
@@ -35,7 +37,7 @@ paths:
                 - source
                 - plan
             examples:
-              Example Request:
+              Example Flight Plan Request:
                 value:
                   source: ExampleClient
                   plan:
@@ -111,10 +113,10 @@ paths:
                     alternate: LTFJ
                     equipment_suffix: L
         description: ''
-      security:
-        - PinNumber: []
       tags:
         - plan
+      security:
+        - basicAuth: []
 components:
   schemas:
     Plan:
@@ -249,7 +251,7 @@ components:
         speed:
           type: integer
   securitySchemes:
-    PinNumber:
+    basicAuth:
       type: http
-      scheme: Basic
-      description: ''
+      description: 'Currently username is always "User". Password is the PIN set on desktop application.'
+      scheme: basic
