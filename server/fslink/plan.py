@@ -244,6 +244,7 @@ class Route:
 
 class Plan:
     def __init__(self, plan, server):
+        self.server = server
         parsed = model_parser(plan, MODEL, server=server)
         self.plan = parsed[0]
         self.errors = parsed[1]
@@ -277,6 +278,13 @@ class Plan:
             points.append(str(self.plan['star'][sid_star_field]))
 
         return ' '.join(points)
+
+    def get_pilot(self, add_base=False):
+        pilot = self.server.settings.get('pilot', 'name')
+        if add_base is not False:
+            pilot += add_base + self.server.settings.get('pilot', 'base')
+
+        return pilot
 
     def get_nested_dict(self, *keys, default=None, convert=None):
         keys = list(keys)

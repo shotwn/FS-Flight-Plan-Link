@@ -10,8 +10,28 @@ class Vatsim:
         self.options = options
         self.mapping = {
             '2': 'callsign',
+            '3': {
+                'merge': [
+                    'aircraft',
+                    'equipment_suffix'
+                ],
+                'join': '/'
+            },
             '4': 'cruise_speed',
             '5': 'departure',
+            '6': {
+                'merge': [
+                    {
+                        'function': 'get_nested_dict',
+                        'args': ['departure_time', 'hours']
+                    },
+                    {
+                        'function': 'get_nested_dict',
+                        'args': ['departure_time', 'minutes']
+                    }
+                ],
+                'join': ''
+            },
             '7': 'cruise_altitude',
             '8': {
                 'function': 'route_to_str'
@@ -34,19 +54,17 @@ class Vatsim:
                 'function': 'get_nested_dict',
                 'args': ['block_time', 'minutes'],
             },
-            '13': 'alternate'
+            '13': 'alternate',
+            '14': {
+                'function': 'get_pilot',
+                'kwargs': {
+                    'add_base': ' '
+                }
+            }
         }
 
     async def export(self, plan):
         mapped = fslink.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'])
-        if 'aircraft' in plan and 'equipment_suffix' in plan:
-            mapped['3'] = f"{plan['aircraft']}{plan['equipment_suffix']}"
-
-        if 'departure_time' in plan:
-            mapped['6'] = f"{plan['departure_time']['hours']}{plan['departure_time']['minutes']}"
-
-        if 'pilot' in plan:
-            mapped['14'] = f"{self.settings.get('pilot', 'name')} {self.settings.get('pilot', 'base')}"
 
         encoded = urllib.parse.urlencode(mapped)
         url = 'https://cert.vatsim.net/fp/file.php'
