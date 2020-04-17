@@ -3,4 +3,4 @@ Send flight simulator flight plans directly from browser to your favorite add-on
 
 This project is WIP.
 
-[Development Documentation](https://shotwn.github.io/FS-Flight-Plan-Link/)
+[Development Documentation](https://shotwn.github.io/FS-Link/)
