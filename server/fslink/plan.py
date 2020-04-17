@@ -100,7 +100,7 @@ MODEL = {
         'type': 'str',
         'max': 3
     },
-    'flight_no': 'str',
+    'flight_code': 'str',
     'route': {
         'format': route_format,
         'required': True

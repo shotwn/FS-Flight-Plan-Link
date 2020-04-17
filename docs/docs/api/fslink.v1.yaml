@@ -53,7 +53,7 @@ paths:
                     departure: LTFM
                     departure_date: '2020-04-12'
                     departure_time: '15:30'
-                    flight_no: '4100'
+                    flight_code: '4100'
                     route: ASMAP L333 LATGA
                     sid:
                       name: ASMA2D
@@ -94,7 +94,7 @@ paths:
                     departure: LTFM
                     departure_date: '2020-04-12'
                     departure_time: '15:30'
-                    flight_no: '4100'
+                    flight_code: '4100'
                     route: string
                     sid:
                       name: string
@@ -164,7 +164,7 @@ components:
         departure_time:
           type: string
           example: '15:30'
-        flight_no:
+        flight_code:
           type: string
           example: '4100'
         route:
