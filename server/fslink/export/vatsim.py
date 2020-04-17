@@ -1,7 +1,7 @@
 import urllib.parse
 import webbrowser
-import fsfplink.exceptions
-import fsfplink.utility
+import fslink.exceptions
+import fslink.utility
 
 
 class Vatsim:
@@ -38,7 +38,7 @@ class Vatsim:
         }
 
     async def export(self, plan):
-        mapped = fsfplink.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'])
+        mapped = fslink.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'])
         if 'aircraft' in plan and 'equipment_suffix' in plan:
             mapped['3'] = f"{plan['aircraft']}{plan['equipment_suffix']}"
 

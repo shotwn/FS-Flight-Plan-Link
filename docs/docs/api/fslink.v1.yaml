@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: FSFPLink
+  title: FSLink
   version: '1.0'
   contact:
     name: shotwn

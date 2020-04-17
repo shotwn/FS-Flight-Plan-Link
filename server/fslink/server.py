@@ -6,10 +6,10 @@ import uuid
 from aiohttp import web
 import aiohttp_cors
 from loguru import logger
-from fsfplink.plan import Plan
-from fsfplink.settings import Settings
-import fsfplink.exceptions
-from fsfplink.json import json_encoder
+from fslink.plan import Plan
+from fslink.settings import Settings
+import fslink.exceptions
+from fslink.json import json_encoder
 
 DEFAULT_SETTINGS = {
     'pilot': {
@@ -20,7 +20,7 @@ DEFAULT_SETTINGS = {
 }
 
 
-class FSFPLServer:
+class FSLServer:
     """
     Initiates:
         available_exporters: ``dict`` with keys as module id's.
@@ -37,9 +37,9 @@ class FSFPLServer:
         self.import_available_exporters()
 
     def import_available_exporters(self):
-        vpilot = importlib.import_module('fsfplink.export.vpilot')
+        vpilot = importlib.import_module('fslink.export.vpilot')
         self.available_exporters[vpilot.ID] = vpilot
-        vatsim = importlib.import_module('fsfplink.export.vatsim')
+        vatsim = importlib.import_module('fslink.export.vatsim')
         self.available_exporters[vatsim.ID] = vatsim
 
     def initiate_exporters(self):
@@ -157,7 +157,7 @@ class FSFPLServer:
                 if not plan.get('alternate'):
                     plan.plan['alternate'] = secondary_plan.get("destination")
 
-        except fsfplink.exceptions.MissingField as exc:
+        except fslink.exceptions.MissingField as exc:
             return web.HTTPUnprocessableEntity(body=json.dumps({
                 'error': exc.message
             }))
@@ -176,7 +176,7 @@ class FSFPLServer:
         for exporter in self.exporters:
             try:
                 await exporter.export(plan)
-            except fsfplink.exceptions.HandledException as exc:
+            except fslink.exceptions.HandledException as exc:
                 print(f'Exporter error for {exporter["name"]}: {exc}')
                 errors[exporter['name']] = exc.message
 
@@ -184,7 +184,7 @@ class FSFPLServer:
 
 
 if __name__ == '__main__':
-    SERVER = FSFPLServer()
+    SERVER = FSLServer()
     SERVER.settings.set([], 'exporters')
     SERVER.add_exporter('vatsim')
     SERVER.add_exporter('vpilot')

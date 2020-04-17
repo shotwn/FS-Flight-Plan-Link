@@ -1,7 +1,7 @@
 {
-  "name": "fsfp-link",
+  "name": "fs-link",
   "version": "1.0.0",
-  "description": "Client library for FSFPLink",
+  "description": "Client library for FSLink",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -28,7 +28,7 @@ let planOptions = {
 	]
 }
 
-let planClient = new fsfpl.Plan(plan, planOptions)
+let planClient = new fsl.Plan(plan, planOptions)
 ```
 
 #### Result
@@ -59,7 +59,7 @@ Clicking it will load the flight in the example code.
     ]
   }
 
-  let planClient = new fsfpl.Plan(plan, planOptions)
+  let planClient = new fsl.Plan(plan, planOptions)
   // planClient.send()
 </script>
 
@@ -68,11 +68,11 @@ Clicking it will load the flight in the example code.
 ## Pulling Data from Existing DOM Structure
 ### Turkish Virtual Departures Page
 
-Using FSFPLink.collector we can pull data from DOM.
+Using FSLink.collector we can pull data from DOM.
 
 #### Used Code
 ```
-const link = new fsfpl.FSFPLink()
+const link = new fsl.FSLink()
 
 function collectTv() {
 	return new Promise((resolve, reject) => {
@@ -295,7 +295,7 @@ radio select for: aircraft, flight-level (cruise-altitude)
 <button class="btn btn-green" onClick='sendTv(this)'>Send</button>
 
 <script>
-const link = new fsfpl.Utility()
+const link = new fsl.Utility()
 
 function collectTv() {
 	return new Promise((resolve, reject) => {

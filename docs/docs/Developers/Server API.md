@@ -10,7 +10,7 @@
     window.onload = function () {
         // Begin Swagger UI call region
         const ui = SwaggerUIBundle({
-            url: "../../api/fsfplink.v1.yaml", //Location of Open API spec in the repo
+            url: "../../api/fslink.v1.yaml", //Location of Open API spec in the repo
             dom_id: '#swagger-ui',
             deepLinking: true,
             withCredentials: true,

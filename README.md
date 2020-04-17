@@ -1,4 +1,4 @@
-# FS-Flight-Plan-Link
+# FS-Link
 Send flight simulator flight plans directly from browser to your favorite add-ons.
 
 This project is WIP.

@@ -21,7 +21,7 @@ export class Plan {
     this.options = Object.assign(defaultOptions, options)
 
     this.applyOptions()
-    console.log('FSFPL Flight Plan Ready.')
+    console.log('FSL Flight Plan Ready.')
   }
 
   applyOptions () {
@@ -53,27 +53,27 @@ export class Plan {
   }
 
   modal (content) {
-    const modal = document.getElementById('FSFPL-modal')
+    const modal = document.getElementById('FSL-modal')
     if (modal === null) {
       return this.createModal(content)
     }
-    const contentDiv = document.getElementById('FSFPL-modal-content')
+    const contentDiv = document.getElementById('FSL-modal-content')
     contentDiv.innerHTML = content
     modal.style.display = 'block'
   }
 
   createModal (content) {
     const modal = document.createElement('div')
-    modal.setAttribute('id', 'FSFPL-modal')
+    modal.setAttribute('id', 'FSL-modal')
     const closeButton = document.createElement('button')
     const closeButtonText = document.createTextNode('X')
     closeButton.appendChild(closeButtonText)
     closeButton.onclick = this.closeModal.bind(this)
-    const modalContent = `<div id="FSFPL-modal-wrapper">
-      <div style="display: inline-block; padding: 10px;">FS Flight Plan Link Client</div>
-      <div id="FSFPL-modal-button"></div>
-      <div id="FSFPL-modal-inside">
-        <div id="FSFPL-modal-content">
+    const modalContent = `<div id="FSL-modal-wrapper">
+      <div style="display: inline-block; padding: 10px;">FS Link Client</div>
+      <div id="FSL-modal-button"></div>
+      <div id="FSL-modal-inside">
+        <div id="FSL-modal-content">
           ${content}
         </div>
       </div>
@@ -82,31 +82,31 @@ export class Plan {
     modal.innerHTML = modalContent
     document.body.appendChild(modal)
 
-    document.getElementById('FSFPL-modal-button').appendChild(closeButton)
+    document.getElementById('FSL-modal-button').appendChild(closeButton)
   }
 
   closeModal () {
-    const modal = document.getElementById('FSFPL-modal')
+    const modal = document.getElementById('FSL-modal')
     modal.style.display = 'none'
   }
 
   resetPinCookie () {
-    Cookies.remove('FSFPL_PIN')
+    Cookies.remove('FSL_PIN')
   }
 
   getPin (useCookie = true) {
-    let pin = Cookies.get('FSFPL_PIN')
+    let pin = Cookies.get('FSL_PIN')
     if (pin !== undefined || !useCookie) {
       return pin
     } else {
       pin = this.askPin()
-      Cookies.set('FSFPL_PIN', pin)
+      Cookies.set('FSL_PIN', pin)
       return pin
     }
   }
 
   askPin () {
-    const pin = prompt('Enter your FS Flight Plan Link PIN code.')
+    const pin = prompt('Enter your FS Link PIN code.')
     return pin
   }
 
@@ -145,7 +145,7 @@ export class Plan {
       })
       .catch(error => {
         if (error.response === undefined || error.response.status === 404) {
-          this.modal('Couldn\'t reach FS Flight Plan Link.<br>Are you sure desktop software is running ?')
+          this.modal('Couldn\'t reach FS Link.<br>Are you sure desktop software is running ?')
           return false
         }
         if (error.response.status === 401) {
@@ -231,4 +231,4 @@ export class Utility {
   }
 }
 
-console.log('FSFPL client is loaded.')
+console.log('FSL client is loaded.')

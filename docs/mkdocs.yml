@@ -1,7 +1,7 @@
-site_name: FS Flight Plan Link
+site_name: FS Link Documentation
 extra_javascript:
   - ./js/main.js
-  - ./api/fsfplink.v1.yaml
+  - ./api/fslink.v1.yaml
 extra_css:
   - ./css/main.css
 site_dir: ./site/

@@ -2,8 +2,8 @@ import json
 import re
 import builtins
 from loguru import logger
-import fsfplink.exceptions
-from fsfplink.json import json_encoder
+import fslink.exceptions
+from fslink.json import json_encoder
 
 TIME_FORMAT_REG = r"^(\d*):(\d*)$"
 DATE_FORMAT_REG = r"^(\d{4})-(\d{2})-(\d{2})$"
@@ -141,7 +141,7 @@ def model_parser(data, model, **kwargs):
             if key not in data:
                 error_msg = f'Missing required field {key}'
                 logger.error(error_msg)
-                raise fsfplink.exceptions.MissingField(error_msg)
+                raise fslink.exceptions.MissingField(error_msg)
 
     # FORMAT DATA PER MODEL
     for key, value in data.items():
@@ -302,11 +302,11 @@ class Plan:
             keys_model = MODEL.get(key)
             if keys_model:
                 if keys_model['required']:
-                    raise fsfplink.exceptions.MissingField(exc, key)
+                    raise fslink.exceptions.MissingField(exc, key)
                 else:
                     return None
             else:
-                raise fsfplink.exceptions.FieldNotInModel(exc, key)
+                raise fslink.exceptions.FieldNotInModel(exc, key)
 
     def __contains__(self, key):
         return key in self.plan

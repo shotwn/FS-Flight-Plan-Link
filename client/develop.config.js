@@ -5,7 +5,7 @@ module.exports = {
     entry: path.resolve(__dirname, path.join('.\\','src', 'index')),
     output: {
         path: path.resolve(__dirname, path.join('..\\','docs', 'docs', 'js')),
-        library: 'fsfpl'
+        library: 'fsl'
     },
     module: {
         rules: [

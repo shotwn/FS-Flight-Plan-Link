@@ -1,4 +1,4 @@
-import fsfplink.exceptions
+import fslink.exceptions
 
 
 def populate_with_map(source, mapping, defaults, required=[]):
@@ -20,7 +20,7 @@ def populate_with_map(source, mapping, defaults, required=[]):
                     mapped[key] = defaults[key]
                 else:
                     if key in required:
-                        raise fsfplink.exceptions.MissingField(exc, f'Missing Field: {key}')
+                        raise fslink.exceptions.MissingField(exc, f'Missing Field: {key}')
                     else:
                         mapped[key] = None
 

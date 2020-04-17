@@ -1,4 +1,4 @@
-#FSFPL-modal {
+#FSL-modal {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -9,7 +9,7 @@
     overflow: hidde;
 }
 
-#FSFPL-modal-wrapper {
+#FSL-modal-wrapper {
     border-radius: 15px;
     overflow: hidden;
     width:600px;
@@ -21,10 +21,10 @@
     color: white;
 }
 
-#FSFPL-modal-inside {
+#FSL-modal-inside {
     padding: 20px 30px 35px 30px;
 }
 
-#FSFPL-modal-button {
+#FSL-modal-button {
     float: right;
 }

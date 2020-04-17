@@ -1,7 +1,7 @@
 # Javascript Client Reference
 
 ## Plan
-`class: fsfpl.Plan(plan, options)`
+`class: fsl.Plan(plan, options)`
 
 A flight plan interface.
 #### Parameters
@@ -41,7 +41,7 @@ Send current flight plan to server. (desktop application)
 
 
 ## Utility
-`class: fsfpl.Utility()`
+`class: fsl.Utility()`
 
 Utily class. Might be subject to change.
 
