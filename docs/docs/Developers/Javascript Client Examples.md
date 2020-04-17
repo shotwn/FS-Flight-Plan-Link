@@ -253,7 +253,38 @@ TAF
 <tr class="seq1"><td class="alnr fntb clrr bckg">Flight Time</td><td><div id="time">1:40</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Flight Type</td><td><div id="fty">International Flight</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Ticket Price</td><td><div id="fty">1400</div></td></tr>
-<tr class="seq1"><td class="alnr fntb clrr bckg">Departure Time</td><td><div id="fty">1140 (z)</div></td></tr>
+
+<tr class="seq1"><td class="alnr fntb clrr bckg">Departure Time</td>
+<td>
+	<div id="fty">
+		<datalist id="quick_times">
+			<option value="14:40" title="Schedule Time">
+			<option value="16:00">
+			<option value="16:30">
+		</datalist>
+		<script>
+		function formatTime(input) {
+			if (input.value.length == 0) {
+				return
+			}
+			if (!input.value.includes(':')) {
+				input.value = input.value.slice(0,2) + ':' + input.value.slice(2, 4)
+			}
+			let spt = input.value.split(':')
+			let h = spt[0].replace(/\D/g,'').slice(0,2).padStart(2, '0')
+			let m = spt[1].replace(/\D/g,'').slice(0,2).padStart(2, '0')
+			h = (h > 23) ? 23 : h
+			h = (h < 0) ? 0 : h
+			m = (m > 59) ? 59 : m
+			m = (m < 0) ? 0 : m
+			input.value = h + ':' + m
+		}
+		</script>
+		<input style="max-width: 75px;" onblur="formatTime(this)" list='quick_times' type="text" id="departure_time" value="14:40" pattern="(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" placeholder="HH:MM" maxlength=5>
+			<button onclick="document.getElementById('departure_time').value = ''" title="Clear">X</button>
+	</div>
+</td></tr>
+
 <tr class="foot"><td class="clrg" colspan="2"><center><b>Please check PILOT CENTRE for <a class="link" href="https://www.turkishvirtual.com/charts.asp">Charts</a> and <a class="link" href="https://www.turkishvirtual.com/scenerys.asp">Sceneries</a><br/></b></center></td></tr>
 </table>
 
@@ -268,6 +299,7 @@ TAF
 <!--
 ADDED
 id field for: departure, destination, alternate
+new field: departure_time
 radio select for: aircraft, flight-level (cruise-altitude)
 --->
 <style>
@@ -337,6 +369,10 @@ function collectTv() {
 			},
 			'cruise_altitude': {
 				selector: 'input[name="cruise-altitude"]:checked',
+				attribute: 'value'
+			},
+			'departure_time': {
+				selector: '#departure_time',
 				attribute: 'value'
 			}
 		}).then(result => {
