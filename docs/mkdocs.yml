@@ -1,9 +1,9 @@
 site_name: FS Link Documentation
 extra_javascript:
   - ./js/main.js
-  - ./api/fslink.v1.yaml
 extra_css:
   - ./css/main.css
+  - ./api/fslink.v1.yaml
 site_dir: ./site/
 theme:
   name: 'rtd-dropdown'
