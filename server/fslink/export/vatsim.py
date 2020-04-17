@@ -64,7 +64,7 @@ class Vatsim:
         }
 
     async def export(self, plan):
-        mapped = fslink.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'])
+        mapped = fslink.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'], '')
 
         encoded = urllib.parse.urlencode(mapped)
         url = 'https://cert.vatsim.net/fp/file.php'

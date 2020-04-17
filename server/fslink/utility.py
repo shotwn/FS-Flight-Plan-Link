@@ -2,7 +2,7 @@ from loguru import logger
 import fslink.exceptions
 
 
-def populate_with_map(source, mapping, defaults, required=[]):
+def populate_with_map(source, mapping, defaults, required=[], replace_none=None):
     mapped = {}
     for key, value in mapping.items():
         """
@@ -38,7 +38,7 @@ def populate_with_map(source, mapping, defaults, required=[]):
                 kwargs = value.get('kwargs', {})
                 mapped[key] = func(*args, **kwargs)
             elif 'merge' in value:
-                collected = populate_with_map(source, dict(zip(range(len(value['merge'])), value['merge'])), defaults, required)  # Send as dict.
+                collected = populate_with_map(source, dict(zip(range(len(value['merge'])), value['merge'])), defaults, required, replace_none)  # Send as dict.
                 collected = filter(None, collected.values())  # Back to list. None values are gone.
                 collected = [f'{x}' for x in collected]  # All to string before join
                 mapped[key] = value['join'].join(collected)
@@ -56,5 +56,8 @@ def populate_with_map(source, mapping, defaults, required=[]):
                         raise fslink.exceptions.MissingField(exc, f'Missing Field: {key}')
                     else:
                         mapped[key] = None
+
+        if mapped[key] is None:
+            mapped[key] = replace_none
 
     return mapped
