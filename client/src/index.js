@@ -216,7 +216,7 @@ export class Utility {
       if (mappingEntry.attribute === 'innerHTML') {
         value = domElement.innerHTML
       } else {
-        value = domElement.getAttribute(mappingEntry.attribute)
+        value = domElement[mappingEntry.attribute]
       }
 
       collectedPlanFields[planField] = value
