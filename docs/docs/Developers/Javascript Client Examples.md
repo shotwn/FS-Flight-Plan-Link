@@ -262,24 +262,6 @@ TAF
 			<option value="16:00">
 			<option value="16:30">
 		</datalist>
-		<script>
-		function formatTime(input) {
-			if (input.value.length == 0) {
-				return
-			}
-			if (!input.value.includes(':')) {
-				input.value = input.value.slice(0,2) + ':' + input.value.slice(2, 4)
-			}
-			let spt = input.value.split(':')
-			let h = spt[0].replace(/\D/g,'').slice(0,2).padStart(2, '0')
-			let m = spt[1].replace(/\D/g,'').slice(0,2).padStart(2, '0')
-			h = (h > 23) ? 23 : h
-			h = (h < 0) ? 0 : h
-			m = (m > 59) ? 59 : m
-			m = (m < 0) ? 0 : m
-			input.value = h + ':' + m
-		}
-		</script>
 		<input style="max-width: 75px;" onblur="formatTime(this)" list='quick_times' type="text" id="departure_time" value="14:40" pattern="(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" placeholder="HH:MM" maxlength=5>
 			<button onclick="document.getElementById('departure_time').value = ''" title="Clear">X</button>
 	</div>
@@ -325,6 +307,25 @@ radio select for: aircraft, flight-level (cruise-altitude)
 <div style='border: 1px solid black; min-height: 250px; min-width:100%; white-space: pre;' id='test-1-result'></div>
 <button class="btn btn-green" onClick='collectTv()'>Collect</button>
 <button class="btn btn-green" onClick='sendTv(this)'>Send</button>
+
+<script>
+	function formatTime(input) {
+		if (input.value.length == 0) {
+			return
+		}
+		if (!input.value.includes(':')) {
+			input.value = input.value.slice(0,2) + ':' + input.value.slice(2, 4)
+		}
+		let spt = input.value.split(':')
+		let h = spt[0].replace(/\D/g,'').slice(0,2).padStart(2, '0')
+		let m = spt[1].replace(/\D/g,'').slice(0,2).padStart(2, '0')
+		h = (h > 23) ? 23 : h
+		h = (h < 0) ? 0 : h
+		m = (m > 59) ? 59 : m
+		m = (m < 0) ? 0 : m
+		input.value = h + ':' + m
+	}
+</script>
 
 <script>
 const link = new fsl.Utility()
