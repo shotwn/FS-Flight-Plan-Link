@@ -81,6 +81,7 @@ paths:
                     cruise_speed: 340
                     alternate: LTFJ
                     equipment_suffix: L
+                    fuel_endurance: '02:00'
                   secondary_plan:
                     air_time: '01:01'
                     airac: 2004
@@ -122,8 +123,7 @@ components:
     Plan:
       title: Plan
       type: object
-      x-examples:
-        example-1: {}
+      x-examples: {}
       description: ''
       properties:
         air_time:
@@ -235,6 +235,9 @@ components:
           maxLength: 3
         distance:
           type: integer
+        fuel_endurance:
+          type: string
+          example: '1:23'
     Waypoint:
       title: Waypoint
       type: object
