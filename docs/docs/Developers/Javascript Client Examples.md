@@ -230,8 +230,8 @@ TAF
 </table>
 
 <table class="grid">
-<tr class="seq1"><td class="alnr fntb clrr bckg" width="80">Flight Code</td><td><div id="flcode">THY 1469</div></td></tr>
-<tr class="seq1"><td class="alnr fntb clrr bckg">Callsign</td><td><div id="callsign">THY 2RD</div></td></tr>
+<tr class="seq1"><td class="alnr fntb clrr bckg" width="80">Flight Code</td><td><div id="flcode" data-value="1469">THY1469</div></td></tr>
+<tr class="seq1"><td class="alnr fntb clrr bckg">Callsign</td><td><div id="callsign">THY2RD</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Aircraft</td><td><div id="acs">
 <div class="radio-toolbar">
 	<input type="radio" id="aircraft_a319" name="aircraft" value="A319" checked>
@@ -249,7 +249,7 @@ TAF
 	<label for="fl_2">FL350</label>
 </div>
 </div></td></tr>
-<tr class="seq1"><td class="alnr fntb clrr bckg">Distance</td><td><div id="distance">498 nm</div></td></tr>
+<tr class="seq1"><td class="alnr fntb clrr bckg">Distance</td><td><div id="distance" data-value="498">498 nm</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Flight Time</td><td><div id="time">1:40</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Flight Type</td><td><div id="fty">International Flight</div></td></tr>
 <tr class="seq1"><td class="alnr fntb clrr bckg">Ticket Price</td><td><div id="fty">1400</div></td></tr>
@@ -338,47 +338,53 @@ function collectTv() {
 		link.collect({
 			'route': {
 				selector: '#route1',
-				attribute: 'innerHTML'
+				property: 'innerHTML'
 			},
 			'flight_code': {
 				selector: '#flcode',
-				attribute: 'innerHTML'
+				dataset: 'value'
 			},
 			'departure': {
 				selector: '#departure',
-				attribute: 'innerHTML'
+				property: 'innerHTML'
 			},
 			'destination': {
 				selector: '#destination',
-				attribute: 'innerHTML'
+				property: 'innerHTML'
 			},
 			'alternate': {
 				selector: '#alternate',
-				attribute: 'innerHTML'
+				property: 'innerHTML'
 			},
 			'callsign': {
 				selector: '#callsign',
-				attribute: 'innerHTML'
+				property: 'innerHTML'
 			},
 			'block_time': {
 				selector: '#time',
-				attribute: 'innerHTML'
+				property: 'innerHTML'
 			},
 			'aircraft': {
 				selector: 'input[name="aircraft"]:checked',
-				attribute: 'value'
+				property: 'value'
 			},
 			'cruise_altitude': {
 				selector: 'input[name="cruise-altitude"]:checked',
-				attribute: 'value'
+				property: 'value'
 			},
 			'departure_time': {
 				selector: '#departure_time',
-				attribute: 'value'
+				property: 'value'
+			},
+			'distance': {
+				selector: '#distance',
+				dataset: 'value'
 			}
 		}).then(result => {
+			result['airline'] = 'THY'
 			document.getElementById('test-1-result').innerHTML = JSON.stringify(result, null, 2)
 			console.log(result)
+
 			resolve(result)
 			/*
 			* We would normally call 'send' here with result.

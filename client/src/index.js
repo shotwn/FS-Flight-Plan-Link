@@ -168,12 +168,12 @@ export class Utility {
   }
 
   /**
-   * @typedef {'innerHTML' | 'value'} MappingAttribute
+   * @typedef {'innerHTML' | 'value'} MappingProperty
    */
   /**
    * @typedef {Object} MappingEntry
    * @property {string} selector
-   * @property {MappingAttribute} attribute
+   * @property {MappingProperty} property
    */
   /**
    * @typedef {Object} Mapping
@@ -187,11 +187,11 @@ export class Utility {
    * collector({
    *  departure: {
    *    selector: '#mydiv-departure',
-   *    attribute: 'innerHTML'
+   *    property: 'innerHTML'
    *  },
    *  destination: {
    *    selector: '#myinput-destination',
-   *    attribute: 'value'
+   *    property: 'value'
    *  }
    * })
    */
@@ -205,7 +205,7 @@ export class Utility {
         continue
       }
 
-      // selector / attribute based.
+      // selector / property based.
       const domElement = document.querySelector(mappingEntry.selector)
       if (domElement === undefined) {
         console.error('No elements selected for ' + mappingEntry.selector)
@@ -213,10 +213,12 @@ export class Utility {
       }
 
       let value
-      if (mappingEntry.attribute === 'innerHTML') {
+      if (mappingEntry.dataset !== undefined) {
+        value = domElement.dataset[mappingEntry.dataset]
+      } else if (mappingEntry.property === 'innerHTML') {
         value = domElement.innerHTML
       } else {
-        value = domElement[mappingEntry.attribute]
+        value = domElement[mappingEntry.property]
       }
 
       collectedPlanFields[planField] = value
