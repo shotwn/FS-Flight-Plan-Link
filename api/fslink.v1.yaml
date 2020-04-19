@@ -142,7 +142,8 @@ components:
           example: A320
         airline:
           type: string
-          example: Turkish
+          example: THY
+          description: ICAO code of the airline.
         alternative:
           type: string
           example: LTFJ
