@@ -1,7 +1,7 @@
 import urllib.parse
 import webbrowser
-import fslink.exceptions
-import fslink.utility
+import server.exceptions
+import server.utility
 
 
 class Vatsim:
@@ -64,7 +64,7 @@ class Vatsim:
         }
 
     async def export(self, plan):
-        mapped = fslink.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'], '')
+        mapped = server.utility.populate_with_map(plan, self.mapping, {}, ['departure', 'destination'], '')
 
         encoded = urllib.parse.urlencode(mapped)
         url = 'https://cert.vatsim.net/fp/file.php'

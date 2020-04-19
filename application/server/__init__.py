@@ -2,14 +2,18 @@ import re
 import importlib
 import json
 import base64
+import time
 import uuid
+import threading
+import asyncio
 from aiohttp import web
 import aiohttp_cors
 from loguru import logger
-from fslink.plan import Plan
-from fslink.settings import Settings
-import fslink.exceptions
-from fslink.json import json_encoder
+from server.plan import Plan
+from server.settings import Settings
+import server.exceptions
+import server.events
+from server.json import json_encoder
 
 DEFAULT_SETTINGS = {
     'pilot': {
@@ -27,19 +31,25 @@ class FSLServer:
             module_id: module.
         exporters: ``list`` of initiated exporters.
     """
-    def __init__(self):
+    def __init__(self, settings=None):
         self.available_exporters = {}
         self.exporters = []
         self.app = web.Application()
         self.cors = aiohttp_cors.setup(self.app)
-        self.settings = Settings('.\\settings.json', DEFAULT_SETTINGS)
+        self.events = server.events.Events()
+        if settings:
+            self.settings = settings
+        else:
+            self.settings = Settings('.\\settings.json', DEFAULT_SETTINGS)
         self.define_routes()
         self.import_available_exporters()
+        self.runner = web.AppRunner(self.app)
+        self.active_plan = None
 
     def import_available_exporters(self):
-        vpilot = importlib.import_module('fslink.export.vpilot')
+        vpilot = importlib.import_module('server.export.vpilot')
         self.available_exporters[vpilot.ID] = vpilot
-        vatsim = importlib.import_module('fslink.export.vatsim')
+        vatsim = importlib.import_module('server.export.vatsim')
         self.available_exporters[vatsim.ID] = vatsim
 
     def initiate_exporters(self):
@@ -97,7 +107,21 @@ class FSLServer:
             ),
         })
 
+    async def start_site(self):
+        """ Async function to setup site runner and start the site. """
+        await self.runner.setup()
+        site = web.TCPSite(self.runner, '127.0.0.1', 32030)
+        await site.start()
+
+    def server_thread_runner(self):
+        """ Blocking, run the server loop """
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.loop.run_until_complete(self.start_site())
+        self.loop.run_forever()
+
     def start(self):
+        """ Blocking, shortcut function to run the site. """
         web.run_app(self.app, host='127.0.0.1', port=32030)
 
     async def test(self, request):
@@ -140,6 +164,10 @@ class FSLServer:
 
         return True
 
+    async def set_active_plan(self, plan):
+        self.active_plan = plan
+        await self.events.run_async_observers_for('plan_activated', plan)
+
     async def post_plan(self, request):
         headers = {}
         # headers['Access-Control-Allow-Origin'] = '*'
@@ -157,10 +185,12 @@ class FSLServer:
                 if not plan.get('alternate'):
                     plan.plan['alternate'] = secondary_plan.get("destination")
 
-        except fslink.exceptions.MissingField as exc:
+        except server.exceptions.MissingField as exc:
             return web.HTTPUnprocessableEntity(body=json.dumps({
                 'error': exc.message
             }))
+
+        await self.set_active_plan(plan)
 
         export_errors = await self.export(plan)
         body = {
@@ -169,14 +199,16 @@ class FSLServer:
             'export_errors': export_errors
         }
 
-        return web.Response(body=json.dumps(body, default=json_encoder), headers=headers)
+        await self.events.run_async_observers_for('post_plan', plan)
+        # return web.Response(body=json.dumps(body, default=json_encoder), headers=headers)
+        return web.Response(body='ok')
 
     async def export(self, plan):
         errors = {}
         for exporter in self.exporters:
             try:
                 await exporter.export(plan)
-            except fslink.exceptions.HandledException as exc:
+            except server.exceptions.HandledException as exc:
                 print(f'Exporter error for {exporter["name"]}: {exc}')
                 errors[exporter['name']] = exc.message
 
@@ -188,4 +220,9 @@ if __name__ == '__main__':
     SERVER.settings.set([], 'exporters')
     SERVER.add_exporter('vatsim')
     SERVER.add_exporter('vpilot')
-    SERVER.start()
+    # SERVER.start()
+    t = threading.Thread(target=SERVER.server_thread_runner, daemon=True)
+    t.start()
+    while True:
+        print('blockss')
+        # time.sleep(1)

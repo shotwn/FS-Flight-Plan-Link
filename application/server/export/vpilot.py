@@ -1,7 +1,7 @@
 import os.path
 import xml.etree.ElementTree as ET
-import fslink.exceptions
-import fslink.utility
+import server.exceptions
+import server.utility
 
 
 class VPilot:
@@ -25,14 +25,14 @@ class VPilot:
         pass
 
     async def export(self, plan):
-        mapped = fslink.utility.populate_with_map(plan, self.mapping, self.defaults)
+        mapped = server.utility.populate_with_map(plan, self.mapping, self.defaults)
 
         xml = ET.Element('FlightPlan')
         for key, value in mapped.items():
             try:
                 xml.set(key, str(value))
             except (TypeError, KeyError) as exc:
-                raise fslink.exceptions.MissingField(exc, f'Missing Field: {key}')
+                raise server.exceptions.MissingField(exc, f'Missing Field: {key}')
 
         # print(plan.plan)
         xml.set('Route', str(plan['route']))

@@ -1,5 +1,5 @@
 from loguru import logger
-import fslink.exceptions
+import server.exceptions
 
 
 def populate_with_map(source, mapping, defaults, required=[], replace_none=None):
@@ -53,7 +53,7 @@ def populate_with_map(source, mapping, defaults, required=[], replace_none=None)
                     mapped[key] = defaults[key]
                 else:
                     if key in required:
-                        raise fslink.exceptions.MissingField(exc, f'Missing Field: {key}')
+                        raise server.exceptions.MissingField(exc, f'Missing Field: {key}')
                     else:
                         mapped[key] = None
 

@@ -1,9 +1,10 @@
 import json
 import re
 import builtins
+from datetime import datetime
 from loguru import logger
-import fslink.exceptions
-from fslink.json import json_encoder
+import server.exceptions
+from server.json import json_encoder
 
 TIME_FORMAT_REG = r"^(\d*):(\d*)$"
 DATE_FORMAT_REG = r"^(\d{4})-(\d{2})-(\d{2})$"
@@ -16,8 +17,8 @@ def time_format(time_str, **kwargs):
 
     groups = matches.groups()
     return {
-        'hours': groups[0],
-        'minutes': groups[1]
+        'hours': int(groups[0]),
+        'minutes': int(groups[1])
     }
 
 
@@ -28,9 +29,9 @@ def date_format(date_str, **kwargs):
 
     groups = matches.groups()
     return {
-        'year': groups[0],
-        'month': groups[1],
-        'day': groups[2]
+        'year': int(groups[0]),
+        'month': int(groups[1]),
+        'day': int(groups[2])
     }
 
 
@@ -53,10 +54,13 @@ def route_format(route, **kwargs):
 
 
 def sid_star_format(sid_star, **kwargs):
-    return {
-        'name': sid_star['name'],
-        'route': route_format(sid_star['route'], **kwargs)
+    sid_star_construct = {
+        'name': sid_star['name']
     }
+    if 'route' in sid_star:
+        sid_star_construct['route'] = route_format(sid_star['route'], **kwargs)
+
+    return sid_star_construct
 
 
 MODEL = {
@@ -120,7 +124,12 @@ MODEL = {
     'type': 'str',
     'alternate': 'str',
     'equipment_suffix': 'str',
-    'distance': 'int'
+    'distance': 'int',
+    'fuel_endurance': {
+        'format': time_format
+    },
+    'pax': 'int',
+    'cargo': 'int'
 }
 
 WAYPOINT_MODEL = {
@@ -133,15 +142,20 @@ WAYPOINT_MODEL = {
 
 
 def model_parser(data, model, **kwargs):
+    """Parse input data according to a model.
+
+    Args:
+        data (Dict): Input data
+        model (Dict): Input model
+
+    Raises:
+        server.exceptions.MissingField: Raises when required field is missing or badly formatted.
+
+    Returns:
+        List: [parsed_data, parse_errors]
+    """
     formatted = {}
     errors = []
-    # CHECK FOR REQUIRED FIELDS
-    for key, value in model.items():
-        if isinstance(value, dict) and 'required' in value and value['required']:
-            if key not in data:
-                error_msg = f'Missing required field {key}'
-                logger.error(error_msg)
-                raise fslink.exceptions.MissingField(error_msg)
 
     # FORMAT DATA PER MODEL
     for key, value in data.items():
@@ -162,7 +176,7 @@ def model_parser(data, model, **kwargs):
             except ValueError:
                 errors.append({
                     'key': key,
-                    'message': f'Input in wrong format or value for {key}. Passing.'
+                    'message': f'Input {value} in wrong format or value for {key}. Passing.'
                 })
                 continue
         else:
@@ -173,7 +187,7 @@ def model_parser(data, model, **kwargs):
                 except ValueError:
                     errors.append({
                         'key': key,
-                        'message': f'Input in wrong format or value for {key}. Passing.'
+                        'message': f'Input {value} in wrong format or value for {key}. Passing.'
                     })
                     continue
             # Internal type and other attributes.
@@ -201,8 +215,16 @@ def model_parser(data, model, **kwargs):
                     continue
         formatted[key] = formatted_value
 
+    # CHECK FOR REQUIRED FIELDS
+    for key, value in model.items():
+        if isinstance(value, dict) and 'required' in value and value['required']:
+            if key not in formatted:
+                error_msg = f'Missing required field {key}'
+                logger.error(error_msg)
+                raise server.exceptions.MissingField(key, None, error_msg)
+
     if errors:
-        logger.error(errors)
+        logger.warning(errors)
 
     return [formatted, errors]
 
@@ -251,6 +273,24 @@ class Plan:
         if self.errors:
             print(f'Parser errors: {self.errors}')
 
+        if 'created_datetime' not in self.plan:
+            self.plan['created_datetime'] = datetime.utcnow()
+
+    def update(self, plan_data):
+        logger.debug('Plan Update Called:')
+        logger.debug(plan_data)
+
+        parsed = model_parser(plan_data, MODEL, server=server)
+        parsed_data = parsed[0]
+        self.errors = parsed[1]
+        if self.errors:
+            logger.warning(self.errors)
+
+        self.plan.update(parsed_data)
+        self.plan['updated_datetime'] = datetime.utcnow()
+
+        return parsed[1]
+
     def json(self):
         return json.dumps({
             'plan': self.plan,
@@ -266,16 +306,16 @@ class Plan:
     def get(self, key, default=None):
         return self.plan.get(key, default)
 
-    def route_to_str(self, open_sid_star=False):
+    def route_to_str(self, include_sid_star=True, open_sid_star=False):
         points = []
-        sid_star_field = 'name' if open_sid_star else 'route'
-        if 'sid' in self.plan:
-            points.append(str(self.plan['sid'][sid_star_field]))
+        sid_star_field = 'route' if open_sid_star else 'name'
+        if 'sid' in self.plan and include_sid_star:
+            points.append(str(self.get_nested_dict('sid', sid_star_field)))
 
         points.append(str(self.plan['route']))
 
-        if 'star' in self.plan:
-            points.append(str(self.plan['star'][sid_star_field]))
+        if 'star' in self.plan and include_sid_star:
+            points.append(str(self.get_nested_dict('star', sid_star_field)))
 
         return ' '.join(points)
 
@@ -310,11 +350,11 @@ class Plan:
             keys_model = MODEL.get(key)
             if keys_model:
                 if keys_model['required']:
-                    raise fslink.exceptions.MissingField(exc, key)
+                    raise server.exceptions.MissingField(key, exc, key)
                 else:
                     return None
             else:
-                raise fslink.exceptions.FieldNotInModel(exc, key)
+                raise server.exceptions.FieldNotInModel(exc, key)
 
     def __contains__(self, key):
         return key in self.plan
