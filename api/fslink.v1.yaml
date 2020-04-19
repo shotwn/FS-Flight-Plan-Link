@@ -82,6 +82,11 @@ paths:
                     alternate: LTFJ
                     equipment_suffix: L
                     fuel_endurance: '02:00'
+                    distance: '250'
+                    departure_runway: '05'
+                    destination_runway: 35R
+                    pax: 102
+                    cargo: 1000
                   secondary_plan:
                     air_time: '01:01'
                     airac: 2004
@@ -238,6 +243,10 @@ components:
         fuel_endurance:
           type: string
           example: '1:23'
+        pax:
+          type: integer
+        cargo:
+          type: integer
     Waypoint:
       title: Waypoint
       type: object
