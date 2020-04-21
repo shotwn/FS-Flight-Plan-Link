@@ -61,3 +61,23 @@ def populate_with_map(source, mapping, defaults, required=[], replace_none=None)
             mapped[key] = replace_none
 
     return mapped
+
+
+def convert_lat(ddmmssH):
+    deg = int(ddmmssH[0:2])
+    mins = int(ddmmssH[2:4])
+    secs = int(ddmmssH[4:6])
+    hem = ddmmssH[6:7]
+    hem_sign = 1 if hem == 'N' else -1
+    all_deg = deg + mins / 60 + secs / 3600 * hem_sign
+    return format(all_deg, '.10f')
+
+
+def convert_lon(dddmmssH):
+    deg = int(dddmmssH[0:3])
+    mins = int(dddmmssH[3:5])
+    secs = int(dddmmssH[5:7])
+    hem = dddmmssH[7:8]
+    hem_sign = 1 if hem == 'E' else -1
+    all_deg = deg + mins / 60 + secs / 3600 * hem_sign
+    return format(all_deg, '.10f')
