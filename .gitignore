@@ -8,3 +8,6 @@ dist
 docs/site/
 
 *.vfp
+*.db
+eap.py
+/data/sources
