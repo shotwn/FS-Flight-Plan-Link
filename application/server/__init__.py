@@ -13,7 +13,8 @@ from server.plan import Plan
 from server.settings import Settings
 import server.exceptions
 import server.events
-from server.json import json_encoder
+import server.database
+from server.json_encoder import json_encoder
 
 DEFAULT_SETTINGS = {
     'pilot': {
@@ -45,6 +46,7 @@ class FSLServer:
         self.import_available_exporters()
         self.runner = web.AppRunner(self.app)
         self.active_plan = None
+        self.database = server.database.Database()
 
     def import_available_exporters(self):
         vpilot = importlib.import_module('server.export.vpilot')
@@ -199,9 +201,11 @@ class FSLServer:
             'export_errors': export_errors
         }
 
+        await plan.populate_rich_data()
+        logger.debug(plan)
         await self.events.run_async_observers_for('post_plan', plan)
-        # return web.Response(body=json.dumps(body, default=json_encoder), headers=headers)
-        return web.Response(body='ok')
+        return web.Response(body=json.dumps(body, default=json_encoder), headers=headers)
+        # return web.Response(body='ok')
 
     async def export(self, plan):
         errors = {}
