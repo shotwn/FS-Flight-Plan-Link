@@ -1,10 +1,12 @@
 import json
 import re
 import builtins
+import math
 from datetime import datetime
 from loguru import logger
 import server.exceptions
-from server.json import json_encoder
+import server.utility
+from server.json_encoder import json_encoder
 
 TIME_FORMAT_REG = r"^(\d*):(\d*)$"
 DATE_FORMAT_REG = r"^(\d{4})-(\d{2})-(\d{2})$"
@@ -232,11 +234,102 @@ def model_parser(data, model, **kwargs):
 class Waypoint:
     def __init__(self, waypoint, server):
         parsed = model_parser(waypoint, WAYPOINT_MODEL, server=server)
+        self.server = server
         self.waypoint = parsed[0]
         self.errors = parsed[1]
 
+    async def detect_track(self, ident):
+        track_re = r"^(\d*)(N|S)(\d*)(W|E)$"
+        matches = re.search(track_re, ident)
+        if matches:
+            coord = matches.groups()
+            lat = server.utility.convert_lat(f'{coord[0]}0000{coord[1]}')
+            lon = server.utility.convert_lon(f'{coord[2].zfill(3)}0000{coord[3]}')
+            return [{
+                'latitude_deg': lat,
+                'longitude_deg': lon
+            }]
+
+    async def find_closest(self, points, last_found):
+        logger.debug(f"Found multiple points: {points} Searching closest to {last_found}")
+        last_delta = None
+        closest = None
+        for point in points:
+            lat_delta = float(point['latitude_deg']) - last_found['latitude']
+            lon_delta = float(point['longitude_deg']) - last_found['longitude']
+            this_delta = math.sqrt(math.pow(lat_delta, 2) + math.pow(lon_delta, 2))
+            if not last_delta or this_delta < last_delta:
+                closest = point
+                last_delta = this_delta
+
+        return dict(closest)
+
+    async def find_entry(self, points, last_found):
+        if not points:
+            return None
+
+        for point in points:
+            if point['start_ident'] == last_found['name']:
+                return point
+        else:
+            try:
+                return points[0]
+            except IndexError:  # !! Make sure of this exception later on
+                return None
+
+    async def enrich(self, last_found=None):
+        db_callable_coords = {
+            'waypoint': self.server.database.waypoint_from_ident,
+            'navaid': self.server.database.navaid_from_ident,
+            'track': self.detect_track,
+            'route': self.server.database.route_from_ident,
+            'high_route': self.server.database.high_route_from_ident,
+        }
+
+        db_no_coord_types = ['route', 'high_route']
+        db_entry_wp_types = ['route', 'high_route']
+
+        if self.waypoint['name'].upper() == 'DCT':
+            self.waypoint['wp_type'] = 'dct'
+            return
+
+        for key, call in db_callable_coords.items():
+            called = await call(self.waypoint['name'])
+            if called:
+                if len(called) == 1 or not last_found:
+                    wp = list(called)[0]
+                else:
+                    if key in db_entry_wp_types:
+                        wp = await self.find_entry(called, last_found)
+                    else:
+                        wp = await self.find_closest(called, last_found)
+
+                self.waypoint['wp_type'] = key
+                break
+        else:
+            self.waypoint['wp_type'] = 'other'
+            self.waypoint['not_in_database'] = True
+            return
+
+        if self.waypoint['wp_type'] in db_no_coord_types:
+            return
+
+        if 'latitude' not in self.waypoint and wp['latitude_deg'] != '':
+            self.waypoint['latitude'] = float(wp['latitude_deg'])
+
+        if 'longitude' not in self.waypoint and wp['longitude_deg'] != '':
+            self.waypoint['longitude'] = float(wp['longitude_deg'])
+
+        return self.waypoint
+
     def __str__(self):
         return self.waypoint['name']
+
+    def __getitem__(self, key):
+        return self.waypoint[key]
+
+    def __contains__(self, key):
+        return key in self.waypoint
 
     def toJSON(self):
         return self.waypoint
@@ -244,18 +337,30 @@ class Waypoint:
 
 class Route:
     def __init__(self, route, server):
+        self.server = server
         self.waypoints = []
         if isinstance(route, list):
             for item in route:
                 self.waypoints.append(Waypoint(item, server))
         else:
-            self.route = route
+            splitted_route = route.split(' ')
+            for wp_name in splitted_route:
+                self.waypoints.append(Waypoint({
+                    'name': wp_name
+                }, server))
 
     def __str__(self):
         if self.waypoints:
             return ' '.join(str(x) for x in self.waypoints)
         # No waypoints
         return self.route
+
+    async def enrich(self):
+        last_found = None
+        for waypoint in self.waypoints:
+            await waypoint.enrich(last_found=last_found)
+            if 'latitude' in waypoint or 'longitude' in waypoint:
+                last_found = waypoint
 
     def toJSON(self):
         if self.waypoints:
@@ -290,6 +395,24 @@ class Plan:
         self.plan['updated_datetime'] = datetime.utcnow()
 
         return parsed[1]
+
+    async def populate_rich_data(self):
+        ap_data = {}
+        departure = self.get('departure')
+        if departure:
+            ap_data['departure'] = await self.server.database.airport_from_ident(departure)
+
+        destination = self.get('destination')
+        if destination:
+            ap_data['destination'] = await self.server.database.airport_from_ident(destination)
+
+        alternate = self.get('alternate')
+        if destination:
+            ap_data['alternate'] = await self.server.database.airport_from_ident(alternate)
+
+        self.plan['airports'] = ap_data
+
+        await self.plan['route'].enrich()
 
     def json(self):
         return json.dumps({
