@@ -1,3 +1,4 @@
+import ctypes
 from loguru import logger
 import server.exceptions
 
@@ -81,3 +82,16 @@ def convert_lon(dddmmssH):
     hem_sign = 1 if hem == 'E' else -1
     all_deg = deg + mins / 60 + secs / 3600 * hem_sign
     return format(all_deg, '.10f')
+
+
+def get_my_documents_dir():
+    """
+    https://stackoverflow.com/questions/6227590/finding-the-users-my-documents-path
+    """
+    CSIDL_PERSONAL = 5       # My Documents
+    SHGFP_TYPE_CURRENT = 0   # Get current, not default value
+
+    buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
+    ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
+
+    return buf.value
