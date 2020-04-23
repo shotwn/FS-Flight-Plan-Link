@@ -5,6 +5,9 @@ import os
 class SettingNotFound(KeyError):
     pass
 
+class DeleteFlag():
+    pass
+
 
 class Settings():
     def __init__(self, src, defaults, *args, **kwargs):
@@ -31,7 +34,7 @@ class Settings():
 
     def set(self, value, *keys):
         settings = self._load()
-        if not keys:
+        if not keys:  # Full save, set everything as is.
             merged = dict()
             merged.update(settings)
             merged.update(value)
@@ -61,13 +64,16 @@ class Settings():
 
     def _save(self, settings):
         with open(self._settings_file_src, "w") as s_file:
-            json.dump(settings, s_file)
+            json.dump(settings, s_file, indent=2)
             self._cache(settings)
 
     def _get_from_nested(self, iterable, keys):
         layer = iterable
         for key in keys:
-            layer = layer[key]
+            if isinstance(key, dict):
+                layer = self._find_in_list(layer, key)
+            else:
+                layer = layer[key]
 
         return layer
 
@@ -78,14 +84,44 @@ class Settings():
 
         for key in keys:
             try:
-                layer = layer[key]
+                if isinstance(key, dict):
+                    layer = self._find_in_list(layer, key)
+                else:
+                    layer = layer[key]
             except KeyError:
                 layer[key] = dict()
                 layer = layer[key]
 
-        layer[last_key] = value
+        if isinstance(last_key, dict):
+            list_item = self._find_in_list(layer, last_key)
+            index = layer.index(list_item)
+        else:
+            index = last_key
+
+        if isinstance(value, DeleteFlag):
+            del layer[index]
+        else:
+            layer[index] = value
 
         return iterable
+
+    def _find_in_list(self, target_list, search_values_dict):
+        if not isinstance(target_list, list):
+            raise KeyError
+
+        for item in target_list:
+            for key, value in search_values_dict.items():
+                try:
+                    if item[key] != value:
+                        break
+                except KeyError:
+                    break
+            else:
+                # No breaks, everything matched.
+                return item
+        else:
+            # No breaks, nothing matched.
+            raise KeyError
 
 
 if __name__ == "__main__":
