@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>876</height>
+    <height>879</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -140,7 +140,7 @@ QPlainTextEdit#remarks {
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -200,7 +200,7 @@ QPlainTextEdit#remarks {
              <x>0</x>
              <y>0</y>
              <width>718</width>
-             <height>738</height>
+             <height>741</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1819,29 +1819,43 @@ QPlainTextEdit#remarks {
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="1" column="0">
-         <widget class="QScrollArea" name="scrollArea_2">
+         <widget class="QScrollArea" name="exporters">
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
+          <widget class="QWidget" name="exporters_contents">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1179</width>
-             <height>724</height>
+             <width>698</width>
+             <height>690</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_41">
-            <item>
-             <widget class="QWidget" name="widget_2" native="true"/>
-            </item>
-           </layout>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_28"/>
           </widget>
          </widget>
         </item>
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_14">
+          <item>
+           <widget class="QLabel" name="label_40">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Exporters</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <spacer name="horizontalSpacer_12">
             <property name="orientation">
@@ -1856,7 +1870,7 @@ QPlainTextEdit#remarks {
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QPushButton" name="export_module_add_button">
             <property name="text">
              <string>Add</string>
             </property>

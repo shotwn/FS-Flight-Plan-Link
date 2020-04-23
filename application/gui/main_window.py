@@ -2,13 +2,56 @@ from datetime import datetime, timedelta
 from functools import partial
 import re
 from loguru import logger
-from PySide2.QtWidgets import QMainWindow
-from PySide2.QtCore import QTime, QDate
+from PySide2.QtWidgets import QMainWindow, QSizePolicy, QSpacerItem
+from PySide2.QtCore import Qt, QTime, QDate, QAbstractTableModel
 
 from server.plan import Plan
 import server.exceptions
 from gui.generated.mainwindow import Ui_MainWindow
+
 from gui.common import GUICommon
+from gui.exporter_container import ExporterContainer
+from gui.add_exporter import AddExporter
+
+
+class AdditionalItemsTableModel(QAbstractTableModel):  # TODO Tables tables tables...
+    def __init__(self, data, **kwargs):
+        super().__init__()
+        self._data = list(data.items())
+        self._headers = kwargs.get('headers', [])
+        print(self._data)
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole or role == Qt.EditRole:
+            # See below for the nested-list data structure.
+            # .row() indexes into the outer list,
+            # .column() indexes into the sub-list
+            return self._data[index.row()][index.column()]
+
+    def flags(self, index):
+        return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
+    def setData(self, index, value, role):
+        print(index)
+        print(value)
+        return True
+
+    def rowCount(self, index):
+        # The length of the outer list.
+        return len(self._data)
+
+    def columnCount(self, index):
+        # The following takes the first sub-list, and returns
+        # the length (only works if all rows are an equal length)
+        return len(self._data[0])
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                try:
+                    return self._headers[section]
+                except (KeyError, IndexError):
+                    return None
 
 
 class MainWindow(QMainWindow, GUICommon):
@@ -22,6 +65,8 @@ class MainWindow(QMainWindow, GUICommon):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.add_module_dialog = None
+
         self.ui.update_button.clicked.connect(self.update_populated_plan)
         self.ui.update_button.setEnabled(False)
 
@@ -31,7 +76,7 @@ class MainWindow(QMainWindow, GUICommon):
 
         self.ui.new_button.clicked.connect(self.empty)
         self.ui.activate_button.clicked.connect(self.activate)
-
+        self.ui.export_module_add_button.clicked.connect(self.add_export_module)
         self.bind_text_edit_slots()
 
     def bind_text_edit_slots(self):
@@ -143,6 +188,11 @@ class MainWindow(QMainWindow, GUICommon):
         self.ui.pilot_name.setText(plan.get_nested_dict('pilot', 'name', default=pilot_name_def))
         self.ui.pilot_base.setText(plan.get_nested_dict('pilot', 'base', default=pilot_base_def))
 
+        model = AdditionalItemsTableModel({
+            'air_time': plan.get('air_time', '')
+        })
+        self.ui.additional.setModel(model)
+
         self.set_populated_plan(plan)
         self.reset_style_sheets()
 
@@ -205,8 +255,6 @@ class MainWindow(QMainWindow, GUICommon):
         self.update_plan(self.populated_plan)
 
     def update_plan(self, plan):
-        print(plan)
-        print(self.populated_plan)
         if not plan:  # No plan populated yet. Or deleted.
             return
 
@@ -292,3 +340,27 @@ class MainWindow(QMainWindow, GUICommon):
         for ui_elem in self.style_sheet_modified:
             ui_elem.setStyleSheet('')
             self.style_sheet_modified.remove(ui_elem)
+
+    def print_exporters(self):
+        layout = self.ui.exporters_contents.layout()
+        self.clear_layout(layout)
+
+        for index, exporter in enumerate(self.gui_root.fslapp.server.exporters):
+            exporter_ui_module = ExporterContainer(self.gui_root, exporter)
+            layout.addWidget(exporter_ui_module)
+
+        layout.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+    def clear_layout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+                else:
+                    self.clear_layout(item.layout())
+
+    def add_export_module(self):
+        self.add_module_dialog = AddExporter(self.gui_root)
+        print(self.add_module_dialog)

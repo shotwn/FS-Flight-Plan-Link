@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'D:\Works\Dev\FS Link\application\gui\ui\mainwindow.ui',
 # licensing of 'D:\Works\Dev\FS Link\application\gui\ui\mainwindow.ui' applies.
 #
-# Created: Sun Apr 19 10:29:43 2020
+# Created: Thu Apr 23 16:07:20 2020
 #      by: pyside2-uic  running on PySide2 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(760, 876)
+        MainWindow.resize(760, 879)
         MainWindow.setMinimumSize(QtCore.QSize(760, 500))
         MainWindow.setStyleSheet("#MainWindow {\n"
 "    background-color: #3d3d3d;\n"
@@ -102,7 +102,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setAlignment(QtCore.Qt.AlignCenter)
         self.scrollArea.setObjectName("scrollArea")
         self.plan = QtWidgets.QWidget()
-        self.plan.setGeometry(QtCore.QRect(0, 0, 718, 738))
+        self.plan.setGeometry(QtCore.QRect(0, 0, 718, 741))
         self.plan.setObjectName("plan")
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.plan)
         self.verticalLayout_10.setSpacing(8)
@@ -790,26 +790,34 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName("tab_3")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.tab_3)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.scrollArea_2 = QtWidgets.QScrollArea(self.tab_3)
-        self.scrollArea_2.setWidgetResizable(True)
-        self.scrollArea_2.setObjectName("scrollArea_2")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1179, 724))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.verticalLayout_41 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
-        self.verticalLayout_41.setObjectName("verticalLayout_41")
-        self.widget_2 = QtWidgets.QWidget(self.scrollAreaWidgetContents)
-        self.widget_2.setObjectName("widget_2")
-        self.verticalLayout_41.addWidget(self.widget_2)
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents)
-        self.gridLayout_3.addWidget(self.scrollArea_2, 1, 0, 1, 1)
+        self.exporters = QtWidgets.QScrollArea(self.tab_3)
+        self.exporters.setWidgetResizable(True)
+        self.exporters.setObjectName("exporters")
+        self.exporters_contents = QtWidgets.QWidget()
+        self.exporters_contents.setGeometry(QtCore.QRect(0, 0, 698, 690))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.exporters_contents.sizePolicy().hasHeightForWidth())
+        self.exporters_contents.setSizePolicy(sizePolicy)
+        self.exporters_contents.setObjectName("exporters_contents")
+        self.verticalLayout_28 = QtWidgets.QVBoxLayout(self.exporters_contents)
+        self.verticalLayout_28.setObjectName("verticalLayout_28")
+        self.exporters.setWidget(self.exporters_contents)
+        self.gridLayout_3.addWidget(self.exporters, 1, 0, 1, 1)
         self.horizontalLayout_14 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_14.setObjectName("horizontalLayout_14")
+        self.label_40 = QtWidgets.QLabel(self.tab_3)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_40.setFont(font)
+        self.label_40.setObjectName("label_40")
+        self.horizontalLayout_14.addWidget(self.label_40)
         spacerItem18 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_14.addItem(spacerItem18)
-        self.pushButton_4 = QtWidgets.QPushButton(self.tab_3)
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.horizontalLayout_14.addWidget(self.pushButton_4)
+        self.export_module_add_button = QtWidgets.QPushButton(self.tab_3)
+        self.export_module_add_button.setObjectName("export_module_add_button")
+        self.horizontalLayout_14.addWidget(self.export_module_add_button)
         self.gridLayout_3.addLayout(self.horizontalLayout_14, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tab_3, "")
         self.gridLayout.addWidget(self.tabWidget, 1, 1, 1, 1)
@@ -823,7 +831,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -897,6 +905,7 @@ class Ui_MainWindow(object):
         self.label_36.setText(QtWidgets.QApplication.translate("MainWindow", "Base", None, -1))
         self.pilot_base.setText(QtWidgets.QApplication.translate("MainWindow", "LTFM", None, -1))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtWidgets.QApplication.translate("MainWindow", "Plan", None, -1))
-        self.pushButton_4.setText(QtWidgets.QApplication.translate("MainWindow", "Add", None, -1))
+        self.label_40.setText(QtWidgets.QApplication.translate("MainWindow", "Exporters", None, -1))
+        self.export_module_add_button.setText(QtWidgets.QApplication.translate("MainWindow", "Add", None, -1))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtWidgets.QApplication.translate("MainWindow", "Export", None, -1))
 
