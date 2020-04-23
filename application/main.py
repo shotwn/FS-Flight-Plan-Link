@@ -18,6 +18,7 @@ class FSLApp:
 
     def prepare_events(self):
         self.server.events.on('post_plan', self.gui.main_window.pack_and_emit, self.gui.main_window.populate_plan)
+        self.server.events.on('exporters_loaded', self.gui.main_window.pack_and_emit, self.gui.main_window.print_exporters)
 
     def start(self):
         self.server_thread.start()
