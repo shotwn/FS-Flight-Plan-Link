@@ -2,12 +2,20 @@ import urllib.parse
 import webbrowser
 import server.exceptions
 import server.utility
+from server.export._exporter import Exporter
 
 
-class Vatsim:
+class Vatsim(Exporter):
+    id = 'vatsim'
+    name = 'Vatsim Prefile'
+    method = 'Browser'
+    description = 'This module loads FP to Vatsim Prefile page in default browser.'
+
     def __init__(self, parent, options):
+        super().__init__(parent, options)
         self.parent = parent
         self.options = options
+        self.nickname = options.get('nickname', '')
         self.mapping = {
             '2': 'callsign',
             '3': {
@@ -71,6 +79,7 @@ class Vatsim:
         webbrowser.open_new_tab(f"{url}?{encoded}")
 
 
-ID = 'vatsim'
-NAME = 'Vatsim'
+# ID = 'vatsim'
+# NAME = 'Vatsim Prefile'
+# TYPE = 'Browser'
 CLASS = Vatsim
