@@ -8,13 +8,25 @@ class Events:
         self.observers = {}
 
     def run_observers_for(self, event, *args, **kwargs):
+        logger.debug(f'Will run observers for {event}')
         all_observers = self.observers.get(event, None)
+        if not all_observers:
+            return
         results = {}
-        for observer in all_observers:
+        for observer_packed in all_observers:
+            observer = observer_packed['observer']
+            obs_args = observer_packed.get('args', []) + args
+            obs_kwargs = observer_packed.get('kwargs', {})
+            obs_kwargs.update(kwargs)
+
             if not asyncio.iscoroutinefunction(observer):
-                observer(*args, **kwargs)
-                result = observer(*args, **kwargs)
+                result = observer(*obs_args, **obs_kwargs)
                 results[observer] = result
+            else:
+                future = asyncio.ensure_future(observer(*obs_args, **obs_kwargs))
+                while not future.done:
+                    continue  # lock and wait.
+                return future.result
 
         return results
 
@@ -58,4 +70,3 @@ class Events:
             'args': args,
             'kwargs': kwargs
         })
-        print(self.observers)
