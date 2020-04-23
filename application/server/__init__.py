@@ -10,7 +10,7 @@ from aiohttp import web
 import aiohttp_cors
 from loguru import logger
 from server.plan import Plan
-from server.settings import Settings
+from server.settings import Settings, DeleteFlag
 import server.exceptions
 import server.events
 import server.database
@@ -43,16 +43,17 @@ class FSLServer:
         else:
             self.settings = Settings('.\\settings.json', DEFAULT_SETTINGS)
         self.define_routes()
-        self.import_available_exporters()
         self.runner = web.AppRunner(self.app)
         self.active_plan = None
         self.database = server.database.Database()
 
+        self.import_available_exporters()
+
     def import_available_exporters(self):
         vpilot = importlib.import_module('server.export.vpilot')
-        self.available_exporters[vpilot.ID] = vpilot
+        self.available_exporters[vpilot.CLASS.id] = vpilot
         vatsim = importlib.import_module('server.export.vatsim')
-        self.available_exporters[vatsim.ID] = vatsim
+        self.available_exporters[vatsim.CLASS.id] = vatsim
 
     def initiate_exporters(self):
         """ Read exporters from settings.
@@ -61,8 +62,13 @@ class FSLServer:
                 id: id defined in module.ID
                 options: options field to pass on the exporter.
                 uuid: unique string as a unique key.
+                auto (bool): Ticked in auto export list.
         """
         settings_exporters = self.settings.get('exporters')
+        if not settings_exporters:
+            logger.warning('No exporters defined in settings.')
+            return
+
         self.exporters = []
         for exporter_options in settings_exporters:
             module = self.available_exporters.get(exporter_options['id'])
@@ -71,7 +77,12 @@ class FSLServer:
                 continue
 
             exporter = module.CLASS(self, exporter_options['options'])
+            exporter.uuid = exporter_options['uuid']
+            exporter.auto = exporter_options['auto']
+
             self.exporters.append(exporter)
+
+        self.events.run_observers_for('exporters_loaded')
 
     def add_exporter(self, module_id, options={}):
         module = self.available_exporters.get(module_id)
@@ -79,9 +90,9 @@ class FSLServer:
             logger.debug(f"Cannot add exporter. Module doesn't exist: {module_id}")
             return False
 
-        default_options_func = getattr(module, 'default_options', None)
-        if default_options_func:
-            merged_options = default_options_func(options)
+        initial_options_func = getattr(module.CLASS, 'initial_options', None)
+        if initial_options_func:
+            merged_options = initial_options_func(options)
         else:
             merged_options = options
 
@@ -89,10 +100,22 @@ class FSLServer:
         exporters.append({
             'id': module_id,
             'options': merged_options,
-            'uuid': str(uuid.uuid4())
+            'uuid': str(uuid.uuid4()),
+            'auto': False
         })
         self.settings.set(exporters, 'exporters')
         self.initiate_exporters()
+
+    def remove_exporter(self, exporter_uuid):
+        all_exporters = self.exporters
+        if not all_exporters:
+            return
+
+        for exporter in all_exporters:
+            if exporter.uuid == exporter_uuid:
+                self.settings.set(DeleteFlag(), 'exporters', {'uuid': exporter_uuid})
+                self.initiate_exporters()
+                return
 
     def define_routes(self):
         self.app.add_routes(
@@ -117,6 +140,7 @@ class FSLServer:
 
     def server_thread_runner(self):
         """ Blocking, run the server loop """
+        self.initiate_exporters()
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
         self.loop.run_until_complete(self.start_site())
@@ -124,6 +148,7 @@ class FSLServer:
 
     def start(self):
         """ Blocking, shortcut function to run the site. """
+        self.initiate_exporters()
         web.run_app(self.app, host='127.0.0.1', port=32030)
 
     async def test(self, request):
@@ -193,23 +218,34 @@ class FSLServer:
             }))
 
         await self.set_active_plan(plan)
+        await plan.populate_rich_data()
 
-        export_errors = await self.export(plan)
+        export_errors = await self.export(plan, only_auto_active=True)
         body = {
             'plan': plan,
             'secondary_plan': secondary_plan,
             'export_errors': export_errors
         }
 
-        await plan.populate_rich_data()
         logger.debug(plan)
         await self.events.run_async_observers_for('post_plan', plan)
         return web.Response(body=json.dumps(body, default=json_encoder), headers=headers)
         # return web.Response(body='ok')
 
-    async def export(self, plan):
+    async def export(self, plan, only_uuids=[], only_auto_active=False):
+        logger.debug('Exporter is running.')
+        if not plan:
+            logger.warning('Plan is set to None. There is nothing to export.')
+            return
+
         errors = {}
         for exporter in self.exporters:
+            if only_uuids and exporter.uuid not in only_uuids:
+                continue
+
+            if only_auto_active and not exporter.auto:
+                continue
+
             try:
                 await exporter.export(plan)
             except server.exceptions.HandledException as exc:
@@ -217,6 +253,7 @@ class FSLServer:
                 errors[exporter['name']] = exc.message
 
         return errors
+
 
 
 if __name__ == '__main__':
@@ -228,5 +265,5 @@ if __name__ == '__main__':
     t = threading.Thread(target=SERVER.server_thread_runner, daemon=True)
     t.start()
     while True:
-        print('blockss')
-        # time.sleep(1)
+        # print('blockss')
+        time.sleep(1)
